@@ -4,6 +4,11 @@ name: Dataset
 # its dataset with the extractor's action (the catalogue's theorems as the project, the Mathlib
 # declarations they mention as upstream nodes, with the annotations), and publishes it as the release
 # dataset-<commit12>. Sites merge it into the Mathlib dataset of the same tag (evidence-core merge).
+#
+# With it, the well-definedness analysis of Mathlib's statements against the catalogue's domains
+# (trust-extract welldefined): every theorem of Mathlib.Probability and Mathlib.InformationTheory,
+# and the claims of the Mathlib probability site, which site-pilot lists. The catalogue's own tactic,
+# mathlib_catalogue_discharger, is tried after the analyzer's default dischargers.
 on:
   push:
     branches: [main]
@@ -23,6 +28,11 @@ jobs:
         uses: leanprover/lean-action@v1
       - name: Name the dataset
         run: echo "TAG=dataset-$(git rev-parse HEAD | cut -c1-12)" >> "$GITHUB_ENV"
+      - name: The claims of the Mathlib probability site
+        run: |
+          curl -fsSL https://raw.githubusercontent.com/LeanTrustBuilders/site-pilot/main/mathlib-probability.txt \
+            | sed 's/#.*//' | awk 'NF {print $1}' > "$RUNNER_TEMP/claims.txt" || : > "$RUNNER_TEMP/claims.txt"
+          wc -l < "$RUNNER_TEMP/claims.txt"
       - name: Extract and publish
         uses: LeanTrustBuilders/extractor/extract@main
         with:
@@ -30,5 +40,11 @@ jobs:
           repo: ${{ github.repository }}
           # Lean's kernel checks the catalogue's closures, proofs included.
           check: meaning
+          welldefined: true
+          welldefined-args: >-
+            --module Mathlib --module MathlibCatalogue
+            --theorems-in Mathlib.Probability --theorems-in Mathlib.InformationTheory
+            --decls-file ${{ runner.temp }}/claims.txt
+            --discharger mathlib_catalogue_discharger --jobs 4
           publish: ${{ env.TAG }}
           title: Mathlib catalogue ${{ github.sha }}
