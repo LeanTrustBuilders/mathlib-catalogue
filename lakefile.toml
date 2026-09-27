@@ -1,0 +1,17 @@
+name = "MathlibCatalogue"
+defaultTargets = ["MathlibCatalogue"]
+
+# Mathlib at the release tag the published Mathlib dataset is extracted from (Mathlib Explorer's
+# mathlib-dataset-<commit12>): merging this catalogue's dataset into it checks that the two agree.
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.35.0-rc2"
+
+[[require]]
+name = "TrustAnnotations"
+git = "https://github.com/LeanTrustBuilders/annotations"
+rev = "main"
+
+[[lean_lib]]
+name = "MathlibCatalogue"
