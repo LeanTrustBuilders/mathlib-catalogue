@@ -1,16 +1,20 @@
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import Mathlib.MeasureTheory.Measure.Decomposition.Lebesgue
 import TrustAnnotations
 
 /-!
-# Measure theory: the Bochner integral and conditional expectation
+# Measure theory: the Bochner integral, conditional expectation, the Radon–Nikodym derivative
 
-Two of the definitions most of Mathlib's probability theory rests on, and the two where a junk value
-matters most: an integral of a non-integrable function is `0`, and so is a conditional expectation
-whenever it is not defined.
+Three of the definitions most of Mathlib's probability theory rests on, and where junk values and
+choices of representative matter most: an integral of a non-integrable function is `0`, and so is a
+conditional expectation or a Radon–Nikodym derivative whenever it is not defined; and where they are
+defined, the last two are one function among those equal to it almost everywhere.
 
 * **Domains**, declared on Mathlib's definitions: where each is meant to apply.
+* **What they are determined up to** (`@[up_to]`): almost-everywhere equality.
 * **Characterizations** stated by one theorem each, with no predicate: the integral of a real
-  function by the textbook formula, and conditional expectation by Mathlib's uniqueness theorem.
+  function by the textbook formula, conditional expectation and the Radon–Nikodym derivative by
+  Mathlib's uniqueness theorems.
 
 Mathlib's own theorems cannot carry an annotation from outside Mathlib, so the characterizations,
 and the specification lemmas that show conditional expectation has its property, are restatements
@@ -29,6 +33,18 @@ attribute [domain (∃ hm : m ≤ m₀, SigmaFinite (μ.trim hm) ∧ Integrable 
 when m is not a sub-σ-algebra of m₀, when μ is not σ-finite on it, or when f is not integrable \
 (`condExp_of_not_le`, `condExp_of_not_sigmaFinite`, `condExp_of_not_integrable`)"]
   MeasureTheory.condExp
+
+attribute [domain (μ.HaveLebesgueDecomposition ν) "the zero function when μ has no Lebesgue \
+decomposition with respect to ν (`rnDeriv_of_not_haveLebesgueDecomposition`)"]
+  MeasureTheory.Measure.rnDeriv
+
+/-! ## What they are determined up to -/
+
+attribute [up_to (· =ᵐ[μ] ·) "one version of the conditional expectation among the functions equal \
+to it μ-almost everywhere; its value at a point means nothing"] MeasureTheory.condExp
+
+attribute [up_to (· =ᵐ[ν] ·) "one density among the functions equal to it ν-almost everywhere; its \
+value at a point means nothing"] MeasureTheory.Measure.rnDeriv
 
 namespace MathlibCatalogue
 
@@ -77,6 +93,38 @@ theorem ae_eq_condExp (hm : m ≤ m₀) [SigmaFinite (μ.trim hm)] {g : α → E
     (hg_eq : ∀ s : Set α, MeasurableSet[m] s → μ s < ∞ → ∫ x in s, g x ∂μ = ∫ x in s, f x ∂μ)
     (hgm : AEStronglyMeasurable[m] g μ) : g =ᵐ[μ] μ[f | m] :=
   ae_eq_condExp_of_forall_setIntegral_eq hm hf hg_int_finite hg_eq hgm
+
+end
+
+/-! ## The Radon–Nikodym derivative: the density of the absolutely continuous part -/
+
+section
+variable {α : Type*} {m : MeasurableSpace α} {μ ν : Measure α}
+
+/-- Mathlib's `measurable_rnDeriv`. -/
+@[specifies MeasureTheory.Measure.rnDeriv "it is measurable"]
+theorem measurable_rnDeriv : Measurable (μ.rnDeriv ν) :=
+  Measure.measurable_rnDeriv μ ν
+
+/-- **The Lebesgue decomposition**: `μ` is a measure singular with respect to `ν`, plus `ν` with
+density `rnDeriv μ ν`. Mathlib's `mutuallySingular_singularPart` and `haveLebesgueDecomposition_add`,
+together. -/
+@[specifies MeasureTheory.Measure.rnDeriv "the Lebesgue decomposition: μ is a part singular with \
+respect to ν plus ν with this density"]
+theorem exists_singular_add_withDensity_rnDeriv [μ.HaveLebesgueDecomposition ν] :
+    ∃ s : Measure α, s ⟂ₘ ν ∧ μ = s + ν.withDensity (μ.rnDeriv ν) :=
+  ⟨μ.singularPart ν, Measure.mutuallySingular_singularPart μ ν, Measure.haveLebesgueDecomposition_add μ ν⟩
+
+/-- **The Radon–Nikodym derivative is the unique measurable density of the absolutely continuous part
+of `μ` with respect to `ν`**, up to `ν`-almost everywhere equality: Mathlib's `eq_rnDeriv`, with the
+singular part stated as existing. That `rnDeriv μ ν` itself has the property needs the Lebesgue
+decomposition, which the characterization records as where it holds. -/
+@[characterization "the density of the part of μ absolutely continuous with respect to ν, the rest \
+being singular"]
+theorem ae_eq_rnDeriv [SigmaFinite ν] {f : α → ℝ≥0∞} (hf : Measurable f)
+    (h : ∃ s : Measure α, s ⟂ₘ ν ∧ μ = s + ν.withDensity f) : f =ᵐ[ν] μ.rnDeriv ν := by
+  obtain ⟨s, hs, hadd⟩ := h
+  exact Measure.eq_rnDeriv hf hs hadd
 
 end
 

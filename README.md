@@ -2,13 +2,13 @@
 
 Evidence about Mathlib's definitions, declared from outside Mathlib with
 [TrustAnnotations](https://github.com/LeanTrustBuilders/annotations): where each definition is meant
-to apply (`@[domain]`), and characterizations stated by one theorem, with the specification lemmas
+to apply (`@[domain]`), what it is determined up to (`@[up_to]`), and characterizations stated by one theorem, with the specification lemmas
 that show the definition has its property. Part of the [LeanTrustBuilders](https://github.com/LeanTrustBuilders)
 suite; see `well-definedness.md` in the design notes.
 
 | module | about |
 |---|---|
-| `MathlibCatalogue.MeasureTheory` | the Bochner integral (domain; characterization of the real case by ∫⁺ − ∫⁻) and conditional expectation (domain; characterization by Mathlib's uniqueness theorem) |
+| `MathlibCatalogue.MeasureTheory` | the Bochner integral (domain; characterization of the real case by ∫⁺ − ∫⁻), conditional expectation and the Radon–Nikodym derivative (each: domain, determined up to a.e. equality, characterization by Mathlib's uniqueness theorem) |
 
 Mathlib's own theorems cannot carry an annotation written outside Mathlib (TrustAnnotations refuses
 an entry whose two declarations are both imported), so characterizations and specification lemmas
