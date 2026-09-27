@@ -19,7 +19,7 @@
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "3b6a474a32bc901356c6dd50da8394be5145db75",
+   "rev": "90e4a33593841a1fb186ca91eecce0e89718ee67",
    "name": "TrustAnnotations",
    "manifestFile": "lake-manifest.json",
    "inputRev": "main",

@@ -8,6 +8,7 @@ suite; see `well-definedness.md` in the design notes.
 
 | module | about |
 |---|---|
+| `MathlibCatalogue.Real` | the real numbers, characterized up to isomorphism as the conditionally complete linearly ordered field, by an isomorphism that also preserves the operations Mathlib defines on `ℝ` separately (`0`, `1`, `-`, `⁻¹`, `<`, `max`, `min`, the casts) |
 | `MathlibCatalogue.MeasureTheory` | the Bochner integral (domain; characterization of the real case by ∫⁺ − ∫⁻), conditional expectation and the Radon–Nikodym derivative (each: domain, determined up to a.e. equality, characterization by Mathlib's uniqueness theorem) |
 
 Mathlib's own theorems cannot carry an annotation written outside Mathlib (TrustAnnotations refuses
