@@ -25,7 +25,7 @@ with the [extractor](https://github.com/LeanTrustBuilders/extractor) (its own th
 project, the Mathlib declarations they mention as upstream nodes, with the annotations), and
 publishes it as the release `dataset-<commit12>`. A site merges it into the Mathlib dataset of the
 same tag (`evidence-core merge`), which checks that the two agree on every declaration they share,
-and builds from the result: the [Mathlib probability site](https://leantrustbuilders.github.io/site-pilot/mathlib-probability/).
+and builds from the result.
 
 ## Adding to it
 
