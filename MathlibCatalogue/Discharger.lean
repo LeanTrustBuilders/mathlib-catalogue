@@ -1,6 +1,7 @@
 import Mathlib.Probability.Martingale.Basic
 import Mathlib.Probability.Process.Stopping
 import Mathlib.MeasureTheory.Function.ConditionalExpectation.Basic
+import Mathlib.Probability.Moments.Basic
 
 /-!
 # How the catalogue's domains are shown to hold
@@ -9,7 +10,8 @@ The well-definedness analyzer ([LeanTrustBuilders/well-defined](https://github.c
 checks each use of a definition with a declared domain against what is in scope where it sits. Its
 default dischargers (`fun_prop`, `positivity`, `infer_instance`, …) know nothing of the facts that
 make a function integrable in probability theory: a random variable in L², a martingale's values, a
-set integral of an integrable function, a stopped process with bounded stopping times.
+set integral of an integrable function, a stopped process with bounded stopping times; nor that a
+moment generating function is positive where it is defined.
 
 `mathlib_catalogue_discharger` is those facts, for the domains this catalogue declares: CI names it
 as a discharger (`trust-extract welldefined --discharger mathlib_catalogue_discharger`). It is a
@@ -27,6 +29,7 @@ macro "mathlib_catalogue_discharger" : tactic => `(tactic| solve_by_elim (maxDep
    MeasureTheory.Submartingale.integrable, MeasureTheory.Supermartingale.integrable,
    MeasureTheory.Martingale.integrable, MeasureTheory.integrable_condExp,
    MeasureTheory.integrable_stoppedValue, MeasureTheory.Filtration.le,
+   ProbabilityTheory.mgf_pos',
    le_trans, one_le_two, le_refl])
 
 section Checks

@@ -1,3 +1,4 @@
 import MathlibCatalogue.MeasureTheory
 import MathlibCatalogue.Real
+import MathlibCatalogue.Moments
 import MathlibCatalogue.Discharger

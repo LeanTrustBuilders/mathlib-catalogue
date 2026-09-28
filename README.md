@@ -9,6 +9,7 @@ suite; see `well-definedness.md` in the design notes.
 | module | about |
 |---|---|
 | `MathlibCatalogue.Real` | the real numbers, characterized up to isomorphism as the conditionally complete linearly ordered field, by an isomorphism that also preserves the operations Mathlib defines on `ℝ` separately (`0`, `1`, `-`, `⁻¹`, `<`, `max`, `min`, the casts) |
+| `MathlibCatalogue.Moments` | the domains of `Real.log` (`0 < x`) and of `moment`, `centralMoment`, `mgf` and `cgf`: the well-definedness analyzer checks their bodies under them, and their uses in Mathlib's statements |
 | `MathlibCatalogue.Discharger` | `mathlib_catalogue_discharger`: the facts that show the catalogue's domains in probability theory (L² random variables, martingales, set integrals, stopped processes), a `solve_by_elim` the well-definedness analyzer tries after its default dischargers |
 | `MathlibCatalogue.MeasureTheory` | the Bochner integral (domain; characterization of the real case by ∫⁺ − ∫⁻), conditional expectation and the Radon–Nikodym derivative (each: domain, determined up to a.e. equality, characterization by Mathlib's uniqueness theorem) |
 
